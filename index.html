@@ -1,10 +1,10 @@
-```html
+
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somebody Pleasure - Lyric Animation</title>
+    <title>Fighting Stickman</title>
     <style>
         * {
             margin: 0;
@@ -13,271 +13,388 @@
         }
 
         body {
-            background: #000;
+            background: #1a1a1a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial', sans-serif;
             overflow: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            height: 100vh;
+        .scene {
+            width: 800px;
+            height: 400px;
             position: relative;
+            background: #222;
+            border-radius: 10px;
             overflow: hidden;
         }
 
-        .text-animation {
+        .stickman {
             position: absolute;
-            color: white;
-            font-size: 2rem;
-            text-align: center;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(50px);
+            bottom: 50px;
+            width: 50px;
+            height: 100px;
         }
 
-        .fade-in {
-            animation: fadeIn 2s forwards;
+        #player1 {
+            left: 200px;
         }
 
-        .fade-out {
-            animation: fadeOut 2s forwards;
+        #player2 {
+            right: 200px;
+            transform: scaleX(-1);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-        }
-
-        .particle {
+        .head {
+            width: 20px;
+            height: 20px;
+            border: 3px solid white;
+            border-radius: 50%;
             position: absolute;
-            pointer-events: none;
-            opacity: 0;
-            animation: particleAnimation 2s linear forwards;
-        }
-
-        @keyframes particleAnimation {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) translateX(var(--x));
-                opacity: 0;
-            }
-        }
-
-        .background {
-            position: fixed;
             top: 0;
-            left: 0;
+            left: 15px;
+        }
+
+        .body {
+            width: 3px;
+            height: 40px;
+            background: white;
+            position: absolute;
+            top: 25px;
+            left: 24px;
+        }
+
+        .arm {
+            width: 3px;
+            height: 30px;
+            background: white;
+            position: absolute;
+            top: 25px;
+            transform-origin: top;
+        }
+
+        .arm.left {
+            left: 15px;
+        }
+
+        .arm.right {
+            left: 33px;
+        }
+
+        .leg {
+            width: 3px;
+            height: 35px;
+            background: white;
+            position: absolute;
+            top: 65px;
+            transform-origin: top;
+        }
+
+        .leg.left {
+            left: 19px;
+        }
+
+        .leg.right {
+            left: 29px;
+        }
+
+        /* Fighting Animations */
+        @keyframes punch {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(45deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes kick {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-45deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes block {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-70deg); }
+        }
+
+        @keyframes hit {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .health-bar {
+            position: absolute;
+            top: 20px;
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid white;
+        }
+
+        #health1 {
+            left: 20px;
+        }
+
+        #health2 {
+            right: 20px;
+        }
+
+        .health-fill {
             width: 100%;
             height: 100%;
-            z-index: -1;
-            background: linear-gradient(45deg, #1a1a1a, #363636);
+            background: #4CAF50;
+            transition: width 0.3s;
+        }
+
+        .effects {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .hit-effect {
+            position: absolute;
+            color: white;
+            font-size: 24px;
+            animation: floatUp 1s forwards;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
         }
 
         .controls {
-            position: fixed;
+            position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             gap: 10px;
-            z-index: 100;
+            z-index: 10;
+        }
+
+        #player1-controls {
+            left: 20px;
+        }
+
+        #player2-controls {
+            right: 20px;
         }
 
         .btn {
             padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+            background: rgba(255,255,255,0.1);
             color: white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
         }
 
         .btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
         }
 
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: #4a90e2;
-            width: 0%;
-            transition: width 0.5s linear;
-        }
-
-        .stars {
-            position: fixed;
+        .ground {
+            position: absolute;
+            bottom: 0;
             width: 100%;
-            height: 100%;
+            height: 50px;
+            background: #333;
+        }
+
+        /* Effect Styles */
+        .effect {
+            position: absolute;
             pointer-events: none;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
+        .punch-effect {
+            width: 20px;
+            height: 20px;
+            border: 2px solid yellow;
             border-radius: 50%;
-            animation: twinkle 1s infinite;
+            animation: expand 0.3s forwards;
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        .kick-effect {
+            width: 30px;
+            height: 10px;
+            background: yellow;
+            opacity: 0.5;
+            animation: fade 0.3s forwards;
+        }
+
+        @keyframes expand {
+            0% { 
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% { 
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fade {
+            0% { opacity: 0.5; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
-    <div class="stars" id="stars"></div>
-    <div class="progress-bar" id="progressBar"></div>
+    <div class="scene">
+        <div class="health-bar" id="health1">
+            <div class="health-fill" id="health1-fill"></div>
+        </div>
+        <div class="health-bar" id="health2">
+            <div class="health-fill" id="health2-fill"></div>
+        </div>
 
-    <div class="container" id="container">
-        <!-- Lyrics will be inserted here -->
-    </div>
+        <div class="stickman" id="player1">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+        </div>
 
-    <div class="controls">
-        <button class="btn" onclick="startAnimation()">Play</button>
-        <button class="btn" onclick="resetAnimation()">Reset</button>
+        <div class="stickman" id="player2">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+        </div>
+
+        <div class="ground"></div>
+        <div class="effects"></div>
+
+        <div class="controls" id="player1-controls">
+            <button class="btn" onclick="player1Attack('punch')">Punch</button>
+            <button class="btn" onclick="player1Attack('kick')">Kick</button>
+            <button class="btn" onclick="player1Block()">Block</button>
+        </div>
+
+        <div class="controls" id="player2-controls">
+            <button class="btn" onclick="player2Attack('punch')">Punch</button>
+            <button class="btn" onclick="player2Attack('kick')">Kick</button>
+            <button class="btn" onclick="player2Block()">Block</button>
+        </div>
     </div>
 
     <script>
-        const lyrics = [
-            "🎵 Somebody Pleasure",
-            "In this moment",
-            "With you by my side",
-            "Every second feels like magic",
-            "Time stands still",
-            "When our hearts align",
-            "Nothing else matters",
-            "Just you and I",
-            "In this perfect harmony",
-            "Creating memories",
-            "That will last forever",
-            "Somebody Pleasure... 💫"
-        ];
+        let player1Health = 100;
+        let player2Health = 100;
+        let isPlayer1Blocking = false;
+        let isPlayer2Blocking = false;
 
-        let currentIndex = 0;
-        let animationInterval;
-        let isPlaying = false;
+        function createEffect(type, x, y) {
+            const effect = document.createElement('div');
+            effect.className = `effect ${type}-effect`;
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            document.querySelector('.effects').appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 300);
+        }
 
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 1 + 's';
-                starsContainer.appendChild(star);
+        function updateHealth(player, damage) {
+            if (player === 1) {
+                player1Health = Math.max(0, player1Health - damage);
+                document.getElementById('health1-fill').style.width = player1Health + '%';
+            } else {
+                player2Health = Math.max(0, player2Health - damage);
+                document.getElementById('health2-fill').style.width = player2Health + '%';
             }
         }
 
-        function createParticles(x, y) {
-            for (let i = 0; i < 5; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = '✨';
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                particle.style.setProperty('--x', (Math.random() - 0.5) * 100 + 'px');
-                document.body.appendChild(particle);
+        function player1Attack(type) {
+            const arm = document.querySelector('#player1 .arm.right');
+            const leg = document.querySelector('#player1 .leg.right');
 
-                setTimeout(() => particle.remove(), 2000);
+            if (type === 'punch') {
+                arm.style.animation = 'punch 0.3s forwards';
+                if (!isPlayer2Blocking) {
+                    updateHealth(2, 10);
+                    createEffect('punch', 500, 150);
+                }
+            } else {
+                leg.style.animation = 'kick 0.5s forwards';
+                if (!isPlayer2Blocking) {
+                    updateHealth(2, 15);
+                    createEffect('kick', 500, 200);
+                }
             }
+
+            setTimeout(() => {
+                arm.style.animation = '';
+                leg.style.animation = '';
+            }, 500);
         }
 
-        function showLyric(index) {
-            const container = document.getElementById('container');
-            const text = document.createElement('div');
-            text.className = 'text-animation';
-            text.textContent = lyrics[index];
-            container.appendChild(text);
+        function player2Attack(type) {
+            const arm = document.querySelector('#player2 .arm.left');
+            const leg = document.querySelector('#player2 .leg.left');
 
-            // Add fade in animation
-            setTimeout(() => text.classList.add('fade-in'), 100);
-
-            // Create particles at random positions
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    createParticles(
-                        Math.random() * window.innerWidth,
-                        Math.random() * window.innerHeight
-                    );
-                }, i * 300);
+            if (type === 'punch') {
+                arm.style.animation = 'punch 0.3s forwards';
+                if (!isPlayer1Blocking) {
+                    updateHealth(1, 10);
+                    createEffect('punch', 300, 150);
+                }
+            } else {
+                leg.style.animation = 'kick 0.5s forwards';
+                if (!isPlayer1Blocking) {
+                    updateHealth(1, 15);
+                    createEffect('kick', 300, 200);
+                }
             }
 
-            // Remove previous lyric
-            const previousText = text.previousElementSibling;
-            if (previousText) {
-                previousText.classList.add('fade-out');
-                setTimeout(() => previousText.remove(), 2000);
-            }
-
-            // Update progress bar
-            const progress = ((index + 1) / lyrics.length) * 100;
-            document.getElementById('progressBar').style.width = `${progress}%`;
+            setTimeout(() => {
+                arm.style.animation = '';
+                leg.style.animation = '';
+            }, 500);
         }
 
-        function startAnimation() {
-            if (!isPlaying) {
-                isPlaying = true;
-                animationInterval = setInterval(() => {
-                    if (currentIndex < lyrics.length) {
-                        showLyric(currentIndex);
-                        currentIndex++;
-                    } else {
-                        clearInterval(animationInterval);
-                        isPlaying = false;
-                    }
-                }, 3000);
-            }
+        function player1Block() {
+            const arms = document.querySelectorAll('#player1 .arm');
+            isPlayer1Blocking = true;
+            
+            arms.forEach(arm => {
+                arm.style.animation = 'block 0.2s forwards';
+            });
+
+            setTimeout(() => {
+                arms.forEach(arm => {
+                    arm.style.animation = '';
+                });
+                isPlayer1Blocking = false;
+            }, 1000);
         }
 
-        function resetAnimation() {
-            clearInterval(animationInterval);
-            isPlaying = false;
-            currentIndex = 0;
-            document.getElementById('container').innerHTML = '';
-            document.getElementById('progressBar').style.width = '0%';
+        function player2Block() {
+            const arms = document.querySelectorAll('#player2 .arm');
+            isPlayer2Blocking = true;
+
+            arms.forEach(arm => {
+                arm.style.animation = 'block 0.2s forwards';
+            });
+
+            setTimeout(() => {
+                arms.forEach(arm => {
+                    arm.style.animation = '';
+                });
+                isPlayer2Blocking = false;
+            }, 1000);
         }
-
-        // Initialize stars
-        createStars();
-
-        // Add mouse particle effect
-        document.addEventListener('mousemove', (e) => {
-            if (Math.random() < 0.1) { // Reduce particle creation frequency
-                createParticles(e.clientX, e.clientY);
-            }
-        });
     </script>
 </body>
 </html>
