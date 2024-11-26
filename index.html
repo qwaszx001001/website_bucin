@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fighting Stickman</title>
+    <title>Dancing Stickman</title>
     <style>
         * {
             margin: 0;
@@ -33,158 +33,142 @@
         .stickman {
             position: absolute;
             bottom: 50px;
-            width: 50px;
-            height: 100px;
-        }
-
-        #player1 {
-            left: 200px;
-        }
-
-        #player2 {
-            right: 200px;
-            transform: scaleX(-1);
+            left: 50%;
+            transform-origin: bottom;
         }
 
         .head {
-            width: 20px;
-            height: 20px;
-            border: 3px solid white;
+            width: 30px;
+            height: 30px;
+            border: 4px solid white;
             border-radius: 50%;
-            position: absolute;
-            top: 0;
-            left: 15px;
+            position: relative;
         }
 
         .body {
-            width: 3px;
-            height: 40px;
+            width: 4px;
+            height: 60px;
             background: white;
-            position: absolute;
-            top: 25px;
-            left: 24px;
+            position: relative;
+            left: 13px;
+            transform-origin: top;
         }
 
         .arm {
-            width: 3px;
-            height: 30px;
+            width: 4px;
+            height: 40px;
             background: white;
             position: absolute;
-            top: 25px;
+            top: 0;
             transform-origin: top;
         }
 
         .arm.left {
-            left: 15px;
+            left: -10px;
         }
 
         .arm.right {
-            left: 33px;
+            right: -10px;
+        }
+
+        .forearm {
+            width: 4px;
+            height: 30px;
+            background: white;
+            position: absolute;
+            bottom: -28px;
+            transform-origin: top;
         }
 
         .leg {
-            width: 3px;
-            height: 35px;
+            width: 4px;
+            height: 45px;
             background: white;
             position: absolute;
-            top: 65px;
+            bottom: -45px;
             transform-origin: top;
         }
 
         .leg.left {
-            left: 19px;
+            left: -5px;
         }
 
         .leg.right {
-            left: 29px;
+            right: -5px;
         }
 
-        /* Fighting Animations */
-        @keyframes punch {
-            0% { transform: rotate(0deg); }
+        .shin {
+            width: 4px;
+            height: 45px;
+            background: white;
+            position: absolute;
+            bottom: -43px;
+            transform-origin: top;
+        }
+
+        /* Dance Moves */
+        .dance-move1 .body {
+            animation: bodyMove 1s infinite;
+        }
+
+        .dance-move1 .arm.left {
+            animation: leftArmDance 1s infinite;
+        }
+
+        .dance-move1 .arm.right {
+            animation: rightArmDance 1s infinite;
+        }
+
+        .dance-move1 .leg.left {
+            animation: leftLegDance 1s infinite;
+        }
+
+        .dance-move1 .leg.right {
+            animation: rightLegDance 1s infinite;
+        }
+
+        .dance-move1 .head {
+            animation: headBop 1s infinite;
+        }
+
+        @keyframes bodyMove {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes leftArmDance {
+            0%, 100% { transform: rotate(-45deg); }
             50% { transform: rotate(45deg); }
-            100% { transform: rotate(0deg); }
         }
 
-        @keyframes kick {
-            0% { transform: rotate(0deg); }
+        @keyframes rightArmDance {
+            0%, 100% { transform: rotate(45deg); }
             50% { transform: rotate(-45deg); }
-            100% { transform: rotate(0deg); }
         }
 
-        @keyframes block {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-70deg); }
+        @keyframes leftLegDance {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(20deg); }
         }
 
-        @keyframes hit {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-            100% { transform: translateX(0); }
+        @keyframes rightLegDance {
+            0%, 100% { transform: rotate(20deg); }
+            50% { transform: rotate(-20deg); }
         }
 
-        .health-bar {
-            position: absolute;
-            top: 20px;
-            width: 200px;
-            height: 20px;
-            background: #333;
-            border: 2px solid white;
-        }
-
-        #health1 {
-            left: 20px;
-        }
-
-        #health2 {
-            right: 20px;
-        }
-
-        .health-fill {
-            width: 100%;
-            height: 100%;
-            background: #4CAF50;
-            transition: width 0.3s;
-        }
-
-        .effects {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        .hit-effect {
-            position: absolute;
-            color: white;
-            font-size: 24px;
-            animation: floatUp 1s forwards;
-        }
-
-        @keyframes floatUp {
-            0% { 
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% { 
-                transform: translateY(-50px);
-                opacity: 0;
-            }
+        @keyframes headBop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .controls {
             position: absolute;
             bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             gap: 10px;
-            z-index: 10;
-        }
-
-        #player1-controls {
-            left: 20px;
-        }
-
-        #player2-controls {
-            right: 20px;
         }
 
         .btn {
@@ -194,10 +178,29 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
         }
 
         .btn:hover {
             background: rgba(255,255,255,0.2);
+        }
+
+        /* Move stickman with arrow keys */
+        .stickman {
+            transition: left 0.1s ease, transform 0.3s ease;
+        }
+
+        .moving-left {
+            transform: scaleX(-1) !important;
+        }
+
+        .jump {
+            animation: jump 0.5s ease;
+        }
+
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-100px); }
         }
 
         .ground {
@@ -207,194 +210,88 @@
             height: 50px;
             background: #333;
         }
-
-        /* Effect Styles */
-        .effect {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        .punch-effect {
-            width: 20px;
-            height: 20px;
-            border: 2px solid yellow;
-            border-radius: 50%;
-            animation: expand 0.3s forwards;
-        }
-
-        .kick-effect {
-            width: 30px;
-            height: 10px;
-            background: yellow;
-            opacity: 0.5;
-            animation: fade 0.3s forwards;
-        }
-
-        @keyframes expand {
-            0% { 
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% { 
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        @keyframes fade {
-            0% { opacity: 0.5; }
-            100% { opacity: 0; }
-        }
     </style>
 </head>
 <body>
     <div class="scene">
-        <div class="health-bar" id="health1">
-            <div class="health-fill" id="health1-fill"></div>
-        </div>
-        <div class="health-bar" id="health2">
-            <div class="health-fill" id="health2-fill"></div>
-        </div>
-
-        <div class="stickman" id="player1">
+        <div class="stickman" id="stickman">
             <div class="head"></div>
-            <div class="body"></div>
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-            <div class="leg left"></div>
-            <div class="leg right"></div>
+            <div class="body">
+                <div class="arm left">
+                    <div class="forearm"></div>
+                </div>
+                <div class="arm right">
+                    <div class="forearm"></div>
+                </div>
+                <div class="leg left">
+                    <div class="shin"></div>
+                </div>
+                <div class="leg right">
+                    <div class="shin"></div>
+                </div>
+            </div>
         </div>
-
-        <div class="stickman" id="player2">
-            <div class="head"></div>
-            <div class="body"></div>
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-            <div class="leg left"></div>
-            <div class="leg right"></div>
-        </div>
-
         <div class="ground"></div>
-        <div class="effects"></div>
-
-        <div class="controls" id="player1-controls">
-            <button class="btn" onclick="player1Attack('punch')">Punch</button>
-            <button class="btn" onclick="player1Attack('kick')">Kick</button>
-            <button class="btn" onclick="player1Block()">Block</button>
-        </div>
-
-        <div class="controls" id="player2-controls">
-            <button class="btn" onclick="player2Attack('punch')">Punch</button>
-            <button class="btn" onclick="player2Attack('kick')">Kick</button>
-            <button class="btn" onclick="player2Block()">Block</button>
+        
+        <div class="controls">
+            <button class="btn" onclick="startDance()">Dance</button>
+            <button class="btn" onclick="jump()">Jump</button>
+            <button class="btn" onclick="stopDance()">Stop</button>
         </div>
     </div>
 
     <script>
-        let player1Health = 100;
-        let player2Health = 100;
-        let isPlayer1Blocking = false;
-        let isPlayer2Blocking = false;
+        const stickman = document.getElementById('stickman');
+        let isDancing = false;
+        let position = 50;
+        const MOVE_SPEED = 5;
 
-        function createEffect(type, x, y) {
-            const effect = document.createElement('div');
-            effect.className = `effect ${type}-effect`;
-            effect.style.left = x + 'px';
-            effect.style.top = y + 'px';
-            document.querySelector('.effects').appendChild(effect);
-            
-            setTimeout(() => effect.remove(), 300);
+        function startDance() {
+            stickman.classList.add('dance-move1');
+            isDancing = true;
         }
 
-        function updateHealth(player, damage) {
-            if (player === 1) {
-                player1Health = Math.max(0, player1Health - damage);
-                document.getElementById('health1-fill').style.width = player1Health + '%';
-            } else {
-                player2Health = Math.max(0, player2Health - damage);
-                document.getElementById('health2-fill').style.width = player2Health + '%';
+        function stopDance() {
+            stickman.classList.remove('dance-move1');
+            isDancing = false;
+        }
+
+        function jump() {
+            if (!stickman.classList.contains('jump')) {
+                stickman.classList.add('jump');
+                setTimeout(() => {
+                    stickman.classList.remove('jump');
+                }, 500);
             }
         }
 
-        function player1Attack(type) {
-            const arm = document.querySelector('#player1 .arm.right');
-            const leg = document.querySelector('#player1 .leg.right');
-
-            if (type === 'punch') {
-                arm.style.animation = 'punch 0.3s forwards';
-                if (!isPlayer2Blocking) {
-                    updateHealth(2, 10);
-                    createEffect('punch', 500, 150);
-                }
-            } else {
-                leg.style.animation = 'kick 0.5s forwards';
-                if (!isPlayer2Blocking) {
-                    updateHealth(2, 15);
-                    createEffect('kick', 500, 200);
-                }
+        // Movement controls
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    position = Math.max(10, position - MOVE_SPEED);
+                    stickman.style.left = position + '%';
+                    stickman.classList.add('moving-left');
+                    break;
+                case 'ArrowRight':
+                    position = Math.min(90, position + MOVE_SPEED);
+                    stickman.style.left = position + '%';
+                    stickman.classList.remove('moving-left');
+                    break;
+                case 'Space':
+                    jump();
+                    break;
+                case 'Enter':
+                    isDancing ? stopDance() : startDance();
+                    break;
             }
+        });
 
-            setTimeout(() => {
-                arm.style.animation = '';
-                leg.style.animation = '';
-            }, 500);
-        }
-
-        function player2Attack(type) {
-            const arm = document.querySelector('#player2 .arm.left');
-            const leg = document.querySelector('#player2 .leg.left');
-
-            if (type === 'punch') {
-                arm.style.animation = 'punch 0.3s forwards';
-                if (!isPlayer1Blocking) {
-                    updateHealth(1, 10);
-                    createEffect('punch', 300, 150);
-                }
-            } else {
-                leg.style.animation = 'kick 0.5s forwards';
-                if (!isPlayer1Blocking) {
-                    updateHealth(1, 15);
-                    createEffect('kick', 300, 200);
-                }
-            }
-
-            setTimeout(() => {
-                arm.style.animation = '';
-                leg.style.animation = '';
-            }, 500);
-        }
-
-        function player1Block() {
-            const arms = document.querySelectorAll('#player1 .arm');
-            isPlayer1Blocking = true;
-            
-            arms.forEach(arm => {
-                arm.style.animation = 'block 0.2s forwards';
-            });
-
-            setTimeout(() => {
-                arms.forEach(arm => {
-                    arm.style.animation = '';
-                });
-                isPlayer1Blocking = false;
-            }, 1000);
-        }
-
-        function player2Block() {
-            const arms = document.querySelectorAll('#player2 .arm');
-            isPlayer2Blocking = true;
-
-            arms.forEach(arm => {
-                arm.style.animation = 'block 0.2s forwards';
-            });
-
-            setTimeout(() => {
-                arms.forEach(arm => {
-                    arm.style.animation = '';
-                });
-                isPlayer2Blocking = false;
-            }, 1000);
-        }
+        // Keyboard instructions
+        console.log('Controls:');
+        console.log('← → : Move left/right');
+        console.log('Space: Jump');
+        console.log('Enter: Dance/Stop');
     </script>
 </body>
 </html>
