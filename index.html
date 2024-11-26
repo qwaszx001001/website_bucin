@@ -1,9 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesial Untuk Kamu ❤️</title>
+    <title>Somebody Pleasure - Lyric Animation</title>
     <style>
         * {
             margin: 0;
@@ -12,242 +13,270 @@
         }
 
         body {
+            background: #000;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            background: linear-gradient(45deg, #ff6b6b, #ffc3a0);
+            align-items: center;
             font-family: 'Arial', sans-serif;
-            color: white;
-            text-align: center;
-            padding: 20px;
+            overflow: hidden;
         }
 
         .container {
+            width: 100%;
             max-width: 800px;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-animation {
+            position: absolute;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            width: 100%;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 1s forwards;
+            transform: translateY(50px);
+        }
+
+        .fade-in {
+            animation: fadeIn 2s forwards;
+        }
+
+        .fade-out {
+            animation: fadeOut 2s forwards;
         }
 
         @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .heart {
-            font-size: 100px;
-            animation: pulse 1s infinite;
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleAnimation 2s linear forwards;
         }
 
-        .message {
-            margin: 30px 0;
-            font-size: 24px;
-            line-height: 1.6;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        @keyframes particleAnimation {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--x));
+                opacity: 0;
+            }
         }
 
-        .memory-box {
-            background: rgba(255,255,255,0.2);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            backdrop-filter: blur(5px);
-        }
-
-        .memory-img {
-            max-width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-
-        .date {
-            font-size: 18px;
-            opacity: 0.8;
-        }
-
-        .button {
-            padding: 15px 30px;
-            font-size: 18px;
-            background: white;
-            color: #ff6b6b;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .button:hover {
-            transform: scale(1.05);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .floating-hearts {
+        .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: -1;
+            background: linear-gradient(45deg, #1a1a1a, #363636);
         }
 
-        .floating-heart {
-            position: absolute;
-            font-size: 20px;
-            animation: float 5s linear infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .music-controls {
+        .controls {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            padding: 10px;
-            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: #4a90e2;
+            width: 0%;
+            transition: width 0.5s linear;
+        }
+
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 1s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="floating-hearts" id="hearts"></div>
-    
-    <div class="container">
-        <div class="heart">❤️</div>
-        <div class="message">
-            Hai Sayang! 🌹<br>
-            Ada pesan spesial untuk kamu...
-        </div>
+    <div class="background"></div>
+    <div class="stars" id="stars"></div>
+    <div class="progress-bar" id="progressBar"></div>
 
-        <button class="button" onclick="showLetter()">Buka Suratnya</button>
-
-        <div id="letter" class="hidden">
-            <div class="memory-box">
-                <h3>Kenangan Indah Kita</h3>
-                <img src="foto.png" alt="Kenangan Kita" class="memory-img">
-                <p class="date">Kencan Pertama Kita: 01 Januari 2024</p>
-                <p>Masih ingat hari spesial ini? Kencan pertama kita yang sangat indah! ✨</p>
-            </div>
-
-            <div class="message">
-                Setiap momen bersamamu sangat berharga.<br>
-                Kamu membuat hidupku lebih berwarna!<br>
-                Aku sayang kamu, setiap hari semakin sayang 💕
-            </div>
-
-            <button class="button" onclick="showSurprise()">Masih Ada Kejutan Lagi!</button>
-        </div>
-
-        <div id="surprise" class="hidden">
-            <div class="memory-box">
-                <h3>Untuk Kamu</h3>
-                <p>Mau gak kita jalan bareng akhir pekan ini? 🌹<br>
-                Ada sesuatu yang spesial yang sudah aku siapkan!</p>
-            </div>
-            
-            <button class="button" onclick="answer('yes')">Mau Dong! 😊</button>
-            <button class="button no-button" onmouseover="moveButton(this)">Nggak Mau 😢</button>
-        </div>
+    <div class="container" id="container">
+        <!-- Lyrics will be inserted here -->
     </div>
 
-    <div class="music-controls" onclick="toggleMusic()">
-        🎵
+    <div class="controls">
+        <button class="btn" onclick="startAnimation()">Play</button>
+        <button class="btn" onclick="resetAnimation()">Reset</button>
     </div>
-
-    <audio id="bgMusic" loop>
-        <source src="music/romantic.mp3" type="audio/mp3">
-    </audio>
 
     <script>
-        let musicPlaying = false;
-        const music = document.getElementById('bgMusic');
+        const lyrics = [
+            "🎵 Somebody Pleasure",
+            "In this moment",
+            "With you by my side",
+            "Every second feels like magic",
+            "Time stands still",
+            "When our hearts align",
+            "Nothing else matters",
+            "Just you and I",
+            "In this perfect harmony",
+            "Creating memories",
+            "That will last forever",
+            "Somebody Pleasure... 💫"
+        ];
 
-        function toggleMusic() {
-            if (musicPlaying) {
-                music.pause();
-                musicPlaying = false;
-            } else {
-                music.play();
-                musicPlaying = true;
+        let currentIndex = 0;
+        let animationInterval;
+        let isPlaying = false;
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 1 + 's';
+                starsContainer.appendChild(star);
             }
         }
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            document.getElementById('hearts').appendChild(heart);
-            
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
-        }
+        function createParticles(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = '✨';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.setProperty('--x', (Math.random() - 0.5) * 100 + 'px');
+                document.body.appendChild(particle);
 
-        setInterval(createHeart, 300);
-
-        function showLetter() {
-            document.getElementById('letter').classList.remove('hidden');
-            this.style.display = 'none';
-        }
-
-        function showSurprise() {
-            document.getElementById('surprise').classList.remove('hidden');
-            this.style.display = 'none';
-        }
-
-        function answer(response) {
-            if (response === 'yes') {
-                alert('Yeay! Aku tunggu ya sayang! 😊❤️');
+                setTimeout(() => particle.remove(), 2000);
             }
         }
 
-        function moveButton(btn) {
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.position = 'fixed';
-            btn.style.left = `${x}px`;
-            btn.style.top = `${y}px`;
+        function showLyric(index) {
+            const container = document.getElementById('container');
+            const text = document.createElement('div');
+            text.className = 'text-animation';
+            text.textContent = lyrics[index];
+            container.appendChild(text);
+
+            // Add fade in animation
+            setTimeout(() => text.classList.add('fade-in'), 100);
+
+            // Create particles at random positions
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    createParticles(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight
+                    );
+                }, i * 300);
+            }
+
+            // Remove previous lyric
+            const previousText = text.previousElementSibling;
+            if (previousText) {
+                previousText.classList.add('fade-out');
+                setTimeout(() => previousText.remove(), 2000);
+            }
+
+            // Update progress bar
+            const progress = ((index + 1) / lyrics.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
         }
 
-        // Tambahan animasi untuk memory-box
-        const boxes = document.querySelectorAll('.memory-box');
-        boxes.forEach(box => {
-            box.addEventListener('mouseover', () => {
-                box.style.transform = 'scale(1.02)';
-                box.style.transition = 'transform 0.3s';
-            });
-            box.addEventListener('mouseout', () => {
-                box.style.transform = 'scale(1)';
-            });
+        function startAnimation() {
+            if (!isPlaying) {
+                isPlaying = true;
+                animationInterval = setInterval(() => {
+                    if (currentIndex < lyrics.length) {
+                        showLyric(currentIndex);
+                        currentIndex++;
+                    } else {
+                        clearInterval(animationInterval);
+                        isPlaying = false;
+                    }
+                }, 3000);
+            }
+        }
+
+        function resetAnimation() {
+            clearInterval(animationInterval);
+            isPlaying = false;
+            currentIndex = 0;
+            document.getElementById('container').innerHTML = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        // Initialize stars
+        createStars();
+
+        // Add mouse particle effect
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() < 0.1) { // Reduce particle creation frequency
+                createParticles(e.clientX, e.clientY);
+            }
         });
     </script>
 </body>
