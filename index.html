@@ -1,297 +1,174 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
+import { Camera } from 'lucide-react';
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dancing Stickman</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+const ClothingVisualizer = () => {
+  const [measurements, setMeasurements] = useState({
+    height: 170,
+    weight: 65,
+    chest: 90,
+    waist: 80,
+    hip: 95
+  });
 
-        body {
-            background: #1a1a1a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+  const [selectedClothing, setSelectedClothing] = useState(null);
+  const [isVisualizationMode, setVisualizationMode] = useState(false);
 
-        .scene {
-            width: 800px;
-            height: 400px;
-            position: relative;
-            background: #222;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+  const clothingItems = [
+    {
+      id: 1,
+      name: "Classic White T-Shirt",
+      price: "Rp 150.000",
+      sizes: ["S", "M", "L", "XL"],
+      colors: ["White", "Black", "Navy"]
+    },
+    {
+      id: 2,
+      name: "Casual Denim Jacket",
+      price: "Rp 450.000",
+      sizes: ["M", "L", "XL"],
+      colors: ["Blue", "Black"]
+    },
+    {
+      id: 3,
+      name: "Slim Fit Chinos",
+      price: "Rp 299.000",
+      sizes: ["30", "32", "34", "36"],
+      colors: ["Khaki", "Navy", "Olive"]
+    }
+  ];
 
-        .stickman {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform-origin: bottom;
-        }
-
-        .head {
-            width: 30px;
-            height: 30px;
-            border: 4px solid white;
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .body {
-            width: 4px;
-            height: 60px;
-            background: white;
-            position: relative;
-            left: 13px;
-            transform-origin: top;
-        }
-
-        .arm {
-            width: 4px;
-            height: 40px;
-            background: white;
-            position: absolute;
-            top: 0;
-            transform-origin: top;
-        }
-
-        .arm.left {
-            left: -10px;
-        }
-
-        .arm.right {
-            right: -10px;
-        }
-
-        .forearm {
-            width: 4px;
-            height: 30px;
-            background: white;
-            position: absolute;
-            bottom: -28px;
-            transform-origin: top;
-        }
-
-        .leg {
-            width: 4px;
-            height: 45px;
-            background: white;
-            position: absolute;
-            bottom: -45px;
-            transform-origin: top;
-        }
-
-        .leg.left {
-            left: -5px;
-        }
-
-        .leg.right {
-            right: -5px;
-        }
-
-        .shin {
-            width: 4px;
-            height: 45px;
-            background: white;
-            position: absolute;
-            bottom: -43px;
-            transform-origin: top;
-        }
-
-        /* Dance Moves */
-        .dance-move1 .body {
-            animation: bodyMove 1s infinite;
-        }
-
-        .dance-move1 .arm.left {
-            animation: leftArmDance 1s infinite;
-        }
-
-        .dance-move1 .arm.right {
-            animation: rightArmDance 1s infinite;
-        }
-
-        .dance-move1 .leg.left {
-            animation: leftLegDance 1s infinite;
-        }
-
-        .dance-move1 .leg.right {
-            animation: rightLegDance 1s infinite;
-        }
-
-        .dance-move1 .head {
-            animation: headBop 1s infinite;
-        }
-
-        @keyframes bodyMove {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(5deg); }
-            75% { transform: rotate(-5deg); }
-        }
-
-        @keyframes leftArmDance {
-            0%, 100% { transform: rotate(-45deg); }
-            50% { transform: rotate(45deg); }
-        }
-
-        @keyframes rightArmDance {
-            0%, 100% { transform: rotate(45deg); }
-            50% { transform: rotate(-45deg); }
-        }
-
-        @keyframes leftLegDance {
-            0%, 100% { transform: rotate(-20deg); }
-            50% { transform: rotate(20deg); }
-        }
-
-        @keyframes rightLegDance {
-            0%, 100% { transform: rotate(20deg); }
-            50% { transform: rotate(-20deg); }
-        }
-
-        @keyframes headBop {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        /* Move stickman with arrow keys */
-        .stickman {
-            transition: left 0.1s ease, transform 0.3s ease;
-        }
-
-        .moving-left {
-            transform: scaleX(-1) !important;
-        }
-
-        .jump {
-            animation: jump 0.5s ease;
-        }
-
-        @keyframes jump {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-100px); }
-        }
-
-        .ground {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            background: #333;
-        }
-    </style>
-</head>
-<body>
-    <div class="scene">
-        <div class="stickman" id="stickman">
-            <div class="head"></div>
-            <div class="body">
-                <div class="arm left">
-                    <div class="forearm"></div>
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-4">Virtual Fitting Room</h1>
+          
+          {/* Measurement Controls */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Your Measurements</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div>
+                  <label className="block mb-2">Height (cm): {measurements.height}</label>
+                  <Slider
+                    value={[measurements.height]}
+                    onValueChange={(value) => setMeasurements({...measurements, height: value[0]})}
+                    min={150}
+                    max={200}
+                    step={1}
+                  />
                 </div>
-                <div class="arm right">
-                    <div class="forearm"></div>
+                <div>
+                  <label className="block mb-2">Weight (kg): {measurements.weight}</label>
+                  <Slider
+                    value={[measurements.weight]}
+                    onValueChange={(value) => setMeasurements({...measurements, weight: value[0]})}
+                    min={40}
+                    max={120}
+                    step={1}
+                  />
                 </div>
-                <div class="leg left">
-                    <div class="shin"></div>
+                <div>
+                  <label className="block mb-2">Chest (cm): {measurements.chest}</label>
+                  <Slider
+                    value={[measurements.chest]}
+                    onValueChange={(value) => setMeasurements({...measurements, chest: value[0]})}
+                    min={70}
+                    max={120}
+                    step={1}
+                  />
                 </div>
-                <div class="leg right">
-                    <div class="shin"></div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Clothing Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {clothingItems.map((item) => (
+              <Card 
+                key={item.id}
+                className={`cursor-pointer transition-transform hover:scale-105 ${
+                  selectedClothing?.id === item.id ? 'ring-2 ring-blue-500' : ''
+                }`}
+                onClick={() => setSelectedClothing(item)}
+              >
+                <CardContent className="p-4">
+                  <div className="bg-gray-200 h-48 mb-4 rounded-lg flex items-center justify-center">
+                    <img 
+                      src={`/api/placeholder/200/200`}
+                      alt={item.name}
+                      className="object-cover h-full w-full rounded-lg"
+                    />
+                  </div>
+                  <h3 className="font-semibold mb-2">{item.name}</h3>
+                  <p className="text-gray-600 mb-2">{item.price}</p>
+                  <div className="flex gap-2 mb-2">
+                    {item.sizes.map((size) => (
+                      <span key={size} className="px-2 py-1 bg-gray-200 rounded text-sm">
+                        {size}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    {item.colors.map((color) => (
+                      <span 
+                        key={color}
+                        className="w-6 h-6 rounded-full border"
+                        style={{ backgroundColor: color.toLowerCase() }}
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Visualization Section */}
+          {selectedClothing && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Virtual Try-On</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center">
+                  {!isVisualizationMode ? (
+                    <div className="text-center">
+                      <Button 
+                        onClick={() => setVisualizationMode(true)}
+                        className="mb-4"
+                      >
+                        <Camera className="mr-2" />
+                        Start Virtual Try-On
+                      </Button>
+                      <p className="text-gray-600">
+                        Take or upload a photo to see how {selectedClothing.name} looks on you
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="w-full max-w-2xl aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
+                      <div className="text-center p-6">
+                        <p className="text-xl font-semibold mb-4">AI Visualization</p>
+                        <p>
+                          Height: {measurements.height}cm<br />
+                          Weight: {measurements.weight}kg<br />
+                          Selected Item: {selectedClothing.name}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-            </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
-        <div class="ground"></div>
-        
-        <div class="controls">
-            <button class="btn" onclick="startDance()">Dance</button>
-            <button class="btn" onclick="jump()">Jump</button>
-            <button class="btn" onclick="stopDance()">Stop</button>
-        </div>
+      </div>
     </div>
+  );
+};
 
-    <script>
-        const stickman = document.getElementById('stickman');
-        let isDancing = false;
-        let position = 50;
-        const MOVE_SPEED = 5;
-
-        function startDance() {
-            stickman.classList.add('dance-move1');
-            isDancing = true;
-        }
-
-        function stopDance() {
-            stickman.classList.remove('dance-move1');
-            isDancing = false;
-        }
-
-        function jump() {
-            if (!stickman.classList.contains('jump')) {
-                stickman.classList.add('jump');
-                setTimeout(() => {
-                    stickman.classList.remove('jump');
-                }, 500);
-            }
-        }
-
-        // Movement controls
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'ArrowLeft':
-                    position = Math.max(10, position - MOVE_SPEED);
-                    stickman.style.left = position + '%';
-                    stickman.classList.add('moving-left');
-                    break;
-                case 'ArrowRight':
-                    position = Math.min(90, position + MOVE_SPEED);
-                    stickman.style.left = position + '%';
-                    stickman.classList.remove('moving-left');
-                    break;
-                case 'Space':
-                    jump();
-                    break;
-                case 'Enter':
-                    isDancing ? stopDance() : startDance();
-                    break;
-            }
-        });
-
-        // Keyboard instructions
-        console.log('Controls:');
-        console.log('← → : Move left/right');
-        console.log('Space: Jump');
-        console.log('Enter: Dance/Stop');
-    </script>
-</body>
-</html>
+export default ClothingVisualizer;
